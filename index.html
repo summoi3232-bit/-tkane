@@ -72,6 +72,15 @@ body{
 .qt-toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:var(--surface3); color:var(--text); border:1px solid var(--border); padding:10px 18px; border-radius:20px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:50;}
 .qt-toast.show{opacity:1;}
 #qt-file-input{display:none;}
+.qt-about-card{background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:14px;}
+.qt-about-card h3{font-family:'Amiri',serif; color:var(--gold); font-size:17px; margin:0 0 8px;}
+.qt-about-card p{font-size:13.5px; color:var(--text-muted); margin:0 0 6px;}
+.qt-about-num{display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--gold); color:#241c04; font-size:12px; font-weight:700; margin-left:8px; flex:0 0 22px;}
+.qt-about-head{display:flex; align-items:center; margin-bottom:8px;}
+.qt-about-head h3{margin:0;}
+.qt-about-quote{border-right:3px solid var(--gold); padding:2px 12px; margin:10px 0; font-family:'Amiri',serif; font-size:14.5px; color:var(--text);}
+.qt-about-list{margin:6px 0 0; padding-right:18px; font-size:13.5px; color:var(--text-muted);}
+.qt-about-list li{margin-bottom:4px;}
 </style>
 </head>
 <body>
@@ -82,6 +91,7 @@ body{
       <p class="qt-sub">تصنيف، ورد، تثبيت، وتكرار متباعد لحفظ القرآن الكريم</p>
     </div>
     <div class="qt-head-btns">
+      <button class="qt-icon-btn" id="qt-about" title="عن المنهجية">؟</button>
       <button class="qt-icon-btn" id="qt-export" title="تصدير نسخة احتياطية">⭳</button>
       <button class="qt-icon-btn" id="qt-import" title="استيراد نسخة احتياطية">⭱</button>
     </div>
@@ -177,7 +187,7 @@ body{
 
   function renderTabs(){
     const tabs = [
-      ["classify","التصنيف"], ["wird","الورد اليومي"], ["tathbit","التثبيت"], ["spaced","التكرار المتباعد"]
+      ["classify","التصنيف"], ["wird","الورد اليومي"], ["tathbit","التثبيت"], ["spaced","التكرار المتباعد"], ["about","المنهجية"]
     ];
     document.getElementById('qt-tabs').innerHTML = tabs.map(([k,l]) =>
       `<button class="qt-tab ${activeTab===k?'active':''}" data-tab="${k}">${l}</button>`
@@ -267,13 +277,57 @@ body{
       }).join('');
   }
 
+  function renderAbout(){
+    return `
+      <div class="qt-about-card">
+        <p style="color:var(--text); font-size:14px;">مسار الإتقان أربع مراحل متتابعة، كل مرحلة تُغذّي التي تليها، والهدف في كل واحدة منها إتقان راسخ لا يزول لا مجرد استظهار سريع يذهب أثره.</p>
+      </div>
+
+      <div class="qt-about-card">
+        <div class="qt-about-head"><span class="qt-about-num">1</span><h3>التصنيف</h3></div>
+        <p>حدّد بصدق مستوى حفظك الحالي لكل سورة: جيد، متوسط، أو ضعيف. هذا التصنيف هو أساس كل ما يليه، فبدونه لا يُعرف ما يحتاج تكرارًا يوميًا وما يحتاج تثبيتًا من الصفر.</p>
+        <div class="qt-about-quote">السورة «الجيدة» ليست بالضرورة المتقنة تمامًا، بل التي تسردها دون توقف يُذكر.</div>
+      </div>
+
+      <div class="qt-about-card">
+        <div class="qt-about-head"><span class="qt-about-num">2</span><h3>الورد اليومي</h3></div>
+        <p>السور المصنّفة «جيد» تُوزَّع على أيام الأسبوع السبعة بالتساوي، فتُراجَع كل سورة منها مرة واحدة أسبوعيًا على الأقل. هذا يمنع تسرّب الحفظ القديم أثناء الانشغال بحفظ الجديد أو تثبيت الضعيف.</p>
+        <ul class="qt-about-list">
+          <li>المراجعة اليومية قصيرة ومركّزة، لا استعراضية</li>
+          <li>الهدف: سرد متصل بلا تلقين، لا مجرد «قراءة على المصحف»</li>
+        </ul>
+      </div>
+
+      <div class="qt-about-card">
+        <div class="qt-about-head"><span class="qt-about-num">3</span><h3>التثبيت (تثبيت المتوسط والضعيف)</h3></div>
+        <p>السور «المتوسطة» و«الضعيفة» تحتاج معالجة مختلفة عن مجرد التكرار: تُقسَّم كل سورة إلى مقاطع صغيرة يمكن إتقانها فعلًا، وتمر بثلاث مراحل متصاعدة:</p>
+        <ul class="qt-about-list">
+          <li><strong>حفظ المقاطع:</strong> إتقان كل مقطع صغير بمفرده</li>
+          <li><strong>ربط المقاطع:</strong> وصل المقاطع ببعضها دون توقف</li>
+          <li><strong>سرد متصل:</strong> السورة كاملة من أولها لآخرها بلا نظر متكرر ولا تلقين</li>
+        </ul>
+        <p>لا تنتقل السورة للمرحلة التالية حتى تُتقَن التي قبلها؛ التسرّع هنا هو أكثر ما يُفسد الحفظ لاحقًا.</p>
+      </div>
+
+      <div class="qt-about-card">
+        <div class="qt-about-head"><span class="qt-about-num">4</span><h3>التكرار المتباعد</h3></div>
+        <p>بعد إتمام التثبيت، تدخل السورة دورة مراجعة بفواصل زمنية متزايدة: يوم، ثم 3 أيام، ثم أسبوع، ثم أسبوعين، ثم شهر. كل مراجعة ناجحة بلا خطأ تُبعّد الفاصل التالي، وكل خطأ يُقرّبه من جديد.</p>
+        <p>هذا يستثمر أثر «التذكّر الفعّال»: كلما استُرجعت السورة من الذاكرة قُبيل نسيانها بقليل، ترسّخ حفظها أكثر من التكرار المفرط المتقارب.</p>
+      </div>
+
+      <div class="qt-about-card">
+        <p style="color:var(--text-faint); font-size:12.5px; margin:0;">بإيجاز: صنّف بصدق، راجع الجيد أسبوعيًا، ثبّت الضعيف على مراحل، ثم أطل الفاصل الزمني تدريجيًا لكل ما أُتقن.</p>
+      </div>`;
+  }
+
   function render(){
     renderTabs();
     const body = document.getElementById('qt-body');
     if (activeTab === 'classify') body.innerHTML = renderClassify();
     else if (activeTab === 'wird') body.innerHTML = renderWird();
     else if (activeTab === 'tathbit') body.innerHTML = renderTathbit();
-    else body.innerHTML = renderSpaced();
+    else if (activeTab === 'spaced') body.innerHTML = renderSpaced();
+    else body.innerHTML = renderAbout();
 
     document.querySelectorAll('[data-tier]').forEach(b => b.onclick = () => setTier(b.dataset.id, b.dataset.tier));
     document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { activeDay = Number(b.dataset.day); render(); });
@@ -310,6 +364,7 @@ body{
     });
   }
 
+  document.getElementById('qt-about').onclick = () => { activeTab = 'about'; render(); };
   document.getElementById('qt-export').onclick = exportBackup;
   document.getElementById('qt-import').onclick = () => document.getElementById('qt-file-input').click();
   document.getElementById('qt-file-input').onchange = (e) => {
