@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>مسار الإتقان</title>
+<meta name="description" content="تصنيف، ورد، تثبيت، وتكرار متباعد لحفظ القرآن الكريم">
+<meta name="theme-color" content="#10231d">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="مسار الإتقان">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap');
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  --bg:#10231d; --surface:#16302a; --surface2:#1c3a32; --surface3:#234339;
+  --text:#f2efe6; --text-muted:#a9bdb3; --text-faint:#6f8578;
+  --gold:#c9a227; --good:#5b9c7a; --medium:#c9a227; --weak:#b5533c;
+  --border:rgba(242,239,230,0.14);
+  direction:rtl; font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--text);
+  line-height:1.7; min-height:100vh;
+  -webkit-tap-highlight-color:transparent;
+}
+#qt-root{
+  max-width:520px; margin:0 auto; min-height:100vh;
+  display:flex; flex-direction:column;
+}
+.qt-head{padding:22px 20px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.qt-title{font-family:'Amiri',serif; font-weight:700; font-size:22px; color:var(--gold); margin:0;}
+.qt-sub{font-size:13px; color:var(--text-muted); margin-top:4px;}
+.qt-head-btns{display:flex; gap:6px; flex:0 0 auto;}
+.qt-icon-btn{background:var(--surface2); border:1px solid var(--border); color:var(--text-muted); width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center;}
+.qt-tabs{display:flex; gap:0; border-bottom:1px solid var(--border); background:var(--surface); overflow-x:auto; position:sticky; top:0; z-index:5;}
+.qt-tab{flex:1; min-width:84px; padding:12px 6px; text-align:center; font-size:13px; color:var(--text-faint); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; font-family:'Tajawal',sans-serif;}
+.qt-tab.active{color:var(--gold); border-bottom:2px solid var(--gold);}
+.qt-body{padding:16px 18px 40px; flex:1; overflow-y:auto;}
+.qt-section-label{font-size:12px; color:var(--text-faint); margin:14px 0 6px;}
+.qt-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid var(--border);}
+.qt-row:last-child{border-bottom:none;}
+.qt-name{font-family:'Amiri',serif; font-size:16px; color:var(--text);}
+.qt-name-num{color:var(--text-faint); font-size:12px; margin-left:6px;}
+.qt-tier-btns{display:flex; gap:6px;}
+.qt-tbtn{border:1px solid var(--border); background:var(--surface2); color:var(--text-muted); font-size:12px; padding:6px 10px; border-radius:6px; cursor:pointer; font-family:'Tajawal',sans-serif;}
+.qt-tbtn.sel-good{background:var(--good); color:#0d1f17; border-color:var(--good);}
+.qt-tbtn.sel-medium{background:var(--medium); color:#241c04; border-color:var(--medium);}
+.qt-tbtn.sel-weak{background:var(--weak); color:#2a0f08; border-color:var(--weak);}
+.qt-day-picker{display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:8px;}
+.qt-day-btn{flex:0 0 auto; padding:7px 12px; border-radius:6px; border:1px solid var(--border); background:var(--surface2); color:var(--text-muted); font-size:12px; cursor:pointer; font-family:'Tajawal',sans-serif;}
+.qt-day-btn.active{background:var(--gold); color:#241c04; border-color:var(--gold);}
+.qt-check{width:22px; height:22px; border-radius:5px; border:1px solid var(--text-faint); background:transparent; cursor:pointer; flex:0 0 22px;}
+.qt-check.done{background:var(--good); border-color:var(--good);}
+.qt-empty{color:var(--text-faint); font-size:13px; text-align:center; padding:30px 10px;}
+.qt-card{background:var(--surface2); border-right:3px solid var(--medium); border-radius:8px; padding:12px 14px; margin-bottom:10px;}
+.qt-card.weak-b{border-color:var(--weak);}
+.qt-card.due{border-color:var(--good);}
+.qt-card-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+.qt-stage-track{display:flex; gap:4px; margin:8px 0;}
+.qt-stage-dot{flex:1; height:5px; border-radius:3px; background:var(--surface3);}
+.qt-stage-dot.on{background:var(--gold);}
+.qt-actions{display:flex; gap:8px; margin-top:8px;}
+.qt-btn{border:none; padding:8px 12px; border-radius:6px; font-size:12px; cursor:pointer; font-family:'Tajawal',sans-serif; flex:1;}
+.qt-btn-primary{background:var(--gold); color:#241c04; font-weight:500;}
+.qt-btn-ghost{background:var(--surface3); color:var(--text-muted);}
+.qt-meta{font-size:11px; color:var(--text-faint);}
+.qt-badge{font-size:11px; padding:2px 8px; border-radius:10px; background:var(--surface3); color:var(--text-muted);}
+.qt-badge.due{background:var(--good); color:#0d1f17;}
+.qt-toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:var(--surface3); color:var(--text); border:1px solid var(--border); padding:10px 18px; border-radius:20px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:50;}
+.qt-toast.show{opacity:1;}
+#qt-file-input{display:none;}
+</style>
+</head>
+<body>
+<div id="qt-root">
+  <div class="qt-head">
+    <div>
+      <p class="qt-title">مسار الإتقان</p>
+      <p class="qt-sub">تصنيف، ورد، تثبيت، وتكرار متباعد لحفظ القرآن الكريم</p>
+    </div>
+    <div class="qt-head-btns">
+      <button class="qt-icon-btn" id="qt-export" title="تصدير نسخة احتياطية">⭳</button>
+      <button class="qt-icon-btn" id="qt-import" title="استيراد نسخة احتياطية">⭱</button>
+    </div>
+  </div>
+  <div class="qt-tabs" id="qt-tabs"></div>
+  <div class="qt-body" id="qt-body"></div>
+</div>
+<div class="qt-toast" id="qt-toast"></div>
+<input type="file" id="qt-file-input" accept="application/json">
+
+<script>
+(function(){
+  const SURAHS = [
+    "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
+    "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
+    "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+    "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
+    "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
+    "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
+    "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
+    "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
+    "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
+    "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+    "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
+    "المسد","الإخلاص","الفلق","الناس"
+  ].map((name, i) => ({ id: i + 1, name }));
+
+  const DAY_NAMES = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  const STAGES = ["حفظ المقاطع","ربط المقاطع","سرد متصل"];
+  const INTERVALS = [1, 3, 7, 14, 30]; // days
+  const STORAGE_KEY = 'masar-al-itqan-state';
+  const todayStr = () => new Date().toISOString().slice(0,10);
+  const addDays = (d, n) => { const dt = new Date(d); dt.setDate(dt.getDate()+n); return dt.toISOString().slice(0,10); };
+
+  let state = { classification: {}, tathbit: {}, spaced: {}, wirdLog: {} };
+  let activeTab = "classify";
+  let activeDay = new Date().getDay();
+
+  function loadState(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) state = Object.assign(state, JSON.parse(raw));
+    } catch(e) { /* first run, defaults stand */ }
+    render();
+  }
+  function saveState(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch(e) { console.error('save failed', e); }
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('qt-toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function exportBackup(){
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `masar-al-itqan-backup-${todayStr()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('تم تصدير النسخة الاحتياطية');
+  }
+
+  function importBackup(file){
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        state = Object.assign({ classification: {}, tathbit: {}, spaced: {}, wirdLog: {} }, parsed);
+        saveState();
+        render();
+        showToast('تم استيراد النسخة الاحتياطية');
+      } catch(err) { showToast('ملف غير صالح'); }
+    };
+    reader.readAsText(file);
+  }
+
+  function setTier(id, tier){
+    state.classification[id] = (state.classification[id] === tier) ? undefined : tier;
+    if (!state.classification[id]) delete state.classification[id];
+    saveState(); render();
+  }
+
+  function tierOf(id){ return state.classification[id]; }
+
+  function renderTabs(){
+    const tabs = [
+      ["classify","التصنيف"], ["wird","الورد اليومي"], ["tathbit","التثبيت"], ["spaced","التكرار المتباعد"]
+    ];
+    document.getElementById('qt-tabs').innerHTML = tabs.map(([k,l]) =>
+      `<button class="qt-tab ${activeTab===k?'active':''}" data-tab="${k}">${l}</button>`
+    ).join('');
+    document.querySelectorAll('.qt-tab').forEach(b => b.onclick = () => { activeTab = b.dataset.tab; render(); });
+  }
+
+  function renderClassify(){
+    return `<p class="qt-section-label">اختر مستوى حفظك لكل سورة (${Object.keys(state.classification).length} من ${SURAHS.length} مصنّفة)</p>` +
+      SURAHS.map(s => `
+        <div class="qt-row">
+          <span class="qt-name">${s.name}<span class="qt-name-num">${s.id}</span></span>
+          <div class="qt-tier-btns">
+            <button class="qt-tbtn ${tierOf(s.id)==='good'?'sel-good':''}" data-id="${s.id}" data-tier="good">جيد</button>
+            <button class="qt-tbtn ${tierOf(s.id)==='medium'?'sel-medium':''}" data-id="${s.id}" data-tier="medium">متوسط</button>
+            <button class="qt-tbtn ${tierOf(s.id)==='weak'?'sel-weak':''}" data-id="${s.id}" data-tier="weak">ضعيف</button>
+          </div>
+        </div>`).join('');
+  }
+
+  function renderWird(){
+    const goodIds = SURAHS.filter(s => tierOf(s.id) === 'good').map(s => s.id);
+    if (goodIds.length === 0) return `<div class="qt-empty">صنّف بعض السور كـ«جيد» أولاً ليظهر لك ورد يومي.</div>`;
+    const dayPicker = `<div class="qt-day-picker">` + DAY_NAMES.map((d,i) =>
+      `<button class="qt-day-btn ${activeDay===i?'active':''}" data-day="${i}">${d}</button>`).join('') + `</div>`;
+    const todaysIds = goodIds.filter((id, idx) => idx % 7 === activeDay);
+    const log = state.wirdLog[todayStr()] || {};
+    const list = todaysIds.length ? todaysIds.map(id => {
+      const s = SURAHS.find(x => x.id === id);
+      const done = !!log[id];
+      return `<div class="qt-row">
+        <span class="qt-name">${s.name}</span>
+        <button class="qt-check ${done?'done':''}" data-wird-id="${id}"></button>
+      </div>`;
+    }).join('') : `<div class="qt-empty">لا سور في هذا اليوم من التوزيع.</div>`;
+    return `<p class="qt-section-label">توزيع السور الجيدة على أيام الأسبوع، سرّدها بلا توقف</p>${dayPicker}${list}`;
+  }
+
+  function renderTathbit(){
+    const ids = SURAHS.filter(s => {
+      const t = tierOf(s.id);
+      return (t === 'medium' || t === 'weak') && !state.spaced[s.id];
+    }).map(s => s.id);
+    if (ids.length === 0) return `<div class="qt-empty">لا سور بحاجة تثبيت حاليًا. صنّف سورًا كـ«متوسط» أو «ضعيف».</div>`;
+    return `<p class="qt-section-label">قسّم كل سورة إلى مقاطع صغيرة، أتقن كل مرحلة قبل التالية</p>` +
+      ids.map(id => {
+        const s = SURAHS.find(x => x.id === id);
+        const stage = state.tathbit[id] || 0;
+        const weak = tierOf(id) === 'weak';
+        const dots = STAGES.map((_, i) => `<div class="qt-stage-dot ${i<=stage?'on':''}"></div>`).join('');
+        const canFinish = stage >= STAGES.length - 1;
+        return `<div class="qt-card ${weak?'weak-b':''}">
+          <div class="qt-card-top">
+            <span class="qt-name">${s.name}</span>
+            <span class="qt-badge">${STAGES[Math.min(stage, STAGES.length-1)]}</span>
+          </div>
+          <div class="qt-stage-track">${dots}</div>
+          <div class="qt-actions">
+            ${!canFinish ? `<button class="qt-btn qt-btn-primary" data-advance="${id}">أتقنت هذه المرحلة</button>` :
+              `<button class="qt-btn qt-btn-primary" data-finish="${id}">أدخلها التكرار المتباعد</button>`}
+          </div>
+        </div>`;
+      }).join('');
+  }
+
+  function renderSpaced(){
+    const entries = Object.keys(state.spaced).map(id => ({ id: Number(id), ...state.spaced[id] }));
+    if (entries.length === 0) return `<div class="qt-empty">لا سور في دورة التكرار المتباعد بعد. أكمل تثبيت سورة أولاً.</div>`;
+    entries.sort((a,b) => a.nextDate.localeCompare(b.nextDate));
+    const today = todayStr();
+    return `<p class="qt-section-label">راجع السور المستحقة، الفترة تكبر كل مرة تنجح فيها</p>` +
+      entries.map(e => {
+        const s = SURAHS.find(x => x.id === e.id);
+        const due = e.nextDate <= today;
+        const stageLabel = `${INTERVALS[e.stage]} يوم`;
+        return `<div class="qt-card ${due?'due':''}">
+          <div class="qt-card-top">
+            <span class="qt-name">${s.name}</span>
+            <span class="qt-badge ${due?'due':''}">${due ? 'مستحقة اليوم' : e.nextDate}</span>
+          </div>
+          <p class="qt-meta">المرحلة الحالية: كل ${stageLabel}</p>
+          <div class="qt-actions">
+            <button class="qt-btn qt-btn-primary" data-passed="${e.id}">تمت المراجعة بلا خطأ</button>
+            <button class="qt-btn qt-btn-ghost" data-failed="${e.id}">أخطأت، أعِد الفترة</button>
+          </div>
+        </div>`;
+      }).join('');
+  }
+
+  function render(){
+    renderTabs();
+    const body = document.getElementById('qt-body');
+    if (activeTab === 'classify') body.innerHTML = renderClassify();
+    else if (activeTab === 'wird') body.innerHTML = renderWird();
+    else if (activeTab === 'tathbit') body.innerHTML = renderTathbit();
+    else body.innerHTML = renderSpaced();
+
+    document.querySelectorAll('[data-tier]').forEach(b => b.onclick = () => setTier(b.dataset.id, b.dataset.tier));
+    document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { activeDay = Number(b.dataset.day); render(); });
+    document.querySelectorAll('[data-wird-id]').forEach(b => b.onclick = () => {
+      const id = b.dataset.wirdId; const t = todayStr();
+      state.wirdLog[t] = state.wirdLog[t] || {};
+      state.wirdLog[t][id] = !state.wirdLog[t][id];
+      saveState(); render();
+    });
+    document.querySelectorAll('[data-advance]').forEach(b => b.onclick = () => {
+      const id = b.dataset.advance;
+      state.tathbit[id] = (state.tathbit[id] || 0) + 1;
+      saveState(); render();
+    });
+    document.querySelectorAll('[data-finish]').forEach(b => b.onclick = () => {
+      const id = b.dataset.finish;
+      state.spaced[id] = { stage: 0, nextDate: addDays(new Date(), INTERVALS[0]) };
+      delete state.tathbit[id];
+      saveState(); render();
+    });
+    document.querySelectorAll('[data-passed]').forEach(b => b.onclick = () => {
+      const id = b.dataset.passed;
+      const cur = state.spaced[id];
+      const nextStage = Math.min(cur.stage + 1, INTERVALS.length - 1);
+      state.spaced[id] = { stage: nextStage, nextDate: addDays(new Date(), INTERVALS[nextStage]) };
+      saveState(); render();
+    });
+    document.querySelectorAll('[data-failed]').forEach(b => b.onclick = () => {
+      const id = b.dataset.failed;
+      const cur = state.spaced[id];
+      const prevStage = Math.max(cur.stage - 1, 0);
+      state.spaced[id] = { stage: prevStage, nextDate: addDays(new Date(), INTERVALS[prevStage]) };
+      saveState(); render();
+    });
+  }
+
+  document.getElementById('qt-export').onclick = exportBackup;
+  document.getElementById('qt-import').onclick = () => document.getElementById('qt-file-input').click();
+  document.getElementById('qt-file-input').onchange = (e) => {
+    if (e.target.files && e.target.files[0]) importBackup(e.target.files[0]);
+    e.target.value = '';
+  };
+
+  loadState();
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
